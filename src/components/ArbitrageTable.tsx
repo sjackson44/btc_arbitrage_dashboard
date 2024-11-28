@@ -3,11 +3,30 @@ import { ArbitrageOpportunity } from '../utils/arbitrage';
 
 interface ArbitrageTableProps {
   opportunities: ArbitrageOpportunity[];
+  connectionStatus: {
+    [key: string]: boolean;
+  };
 }
 
-export const ArbitrageTable: React.FC<ArbitrageTableProps> = ({ opportunities }) => {
+export const ArbitrageTable: React.FC<ArbitrageTableProps> = ({ opportunities, connectionStatus }) => {
+  const allConnected = Object.values(connectionStatus).every(status => status);
+
+  if (!allConnected) {
+    return (
+      <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+        <p className="text-yellow-600 dark:text-yellow-400">
+          Waiting for all exchange connections...
+        </p>
+      </div>
+    );
+  }
+
   if (opportunities.length === 0) {
-    return <p className="text-gray-500 dark:text-gray-400">No arbitrage opportunities found.</p>;
+    return (
+      <p className="text-gray-500 dark:text-gray-400">
+        No arbitrage opportunities found.
+      </p>
+    );
   }
 
   return (
